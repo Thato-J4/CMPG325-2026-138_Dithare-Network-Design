@@ -1,0 +1,248 @@
+<svg viewBox="0 0 1200 1550" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <!-- Classic draw.io subtle drop shadow -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="1550" fill="#ffffff"/>
+
+  <!-- Part 2: Title -->
+  <text x="600" y="45" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a1a">DITHARE CAR WASH &amp; DETAILING GROUP</text>
+  <text x="600" y="75" text-anchor="middle" font-size="15" fill="#555555">Logical Network Topology — VLAN Segmentation, ACLs &amp; NAT/PAT</text>
+
+  <!-- Part 3: External Network -->
+  <rect x="400" y="110" width="400" height="100" rx="6" fill="#f5f5f5" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="600" y="140" text-anchor="middle" font-size="15" font-weight="bold" fill="#333333">SIMULATED EXTERNAL NETWORK</text>
+  <text x="600" y="165" text-anchor="middle" font-size="13" fill="#555555">ISP Router: 203.0.113.1/30</text>
+  <text x="600" y="185" text-anchor="middle" font-size="13" fill="#555555">External test host (ISP LAN)</text>
+
+  <!-- Connection: External to R1 -->
+  <line x1="600" y1="210" x2="600" y2="250" stroke="#555555" stroke-width="2"/>
+  <text x="615" y="235" font-size="12" font-weight="bold" fill="#555555">WAN — 203.0.113.0/30</text>
+
+  <!-- Part 12: NAT/PAT Boundary (Dashed Box) -->
+  <rect x="50" y="250" width="340" height="130" rx="6" fill="none" stroke="#d6b656" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="70" y="270" font-size="13" font-weight="bold" fill="#b08d00">NAT/PAT Boundary</text>
+  <text x="70" y="295" font-size="12" font-weight="bold" fill="#333333">OUTSIDE:</text>
+  <text x="70" y="312" font-size="12" fill="#555555">G0/0 (203.0.113.2/30)</text>
+  <text x="70" y="335" font-size="12" font-weight="bold" fill="#333333">INSIDE:</text>
+  <text x="70" y="352" font-size="12" fill="#555555">G0/1.10 (VLAN 10)</text>
+  <text x="200" y="312" font-size="11" fill="#b08d00" font-weight="bold">VLAN 10 → PAT → External Network</text>
+  <text x="200" y="330" font-size="11" fill="#555555">Source: 192.168.59.0/27</text>
+  <text x="200" y="348" font-size="11" fill="#555555">Translated via: 203.0.113.2</text>
+
+  <!-- Part 4 & 5: R1 (Edge Router) -->
+  <rect x="450" y="250" width="300" height="130" rx="6" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="600" y="275" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">R1 — Edge Router (2911)</text>
+  
+  <text x="470" y="305" font-size="12" font-weight="bold" fill="#333333">G0/0 — OUTSIDE</text>
+  <text x="470" y="322" font-size="12" fill="#555555">203.0.113.2/30</text>
+  <text x="470" y="342" font-size="12" font-weight="bold" fill="#b85450">NAT OUTSIDE</text>
+
+  <text x="470" y="365" font-size="12" font-weight="bold" fill="#333333">G0/1 — 802.1Q TRUNK</text>
+  <text x="470" y="382" font-size="12" fill="#555555">VLANs 10, 20, 30</text>
+
+  <!-- Part 6: Subinterfaces Box -->
+  <rect x="780" y="250" width="370" height="130" rx="6" fill="#ffffff" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="800" y="275" font-size="13" font-weight="bold" fill="#1a1a1a">Router Subinterfaces</text>
+  
+  <text x="800" y="300" font-size="12" font-weight="bold" fill="#b08d00">G0/1.10 — VLAN 10</text>
+  <text x="800" y="316" font-size="11" fill="#555555">192.168.59.1/27 | dot1Q 10 | ACL 100 IN | NAT INSIDE</text>
+
+  <text x="800" y="340" font-size="12" font-weight="bold" fill="#b85450">G0/1.20 — VLAN 20</text>
+  <text x="800" y="356" font-size="11" fill="#555555">192.168.59.33/27 | dot1Q 20 | ACL 110 IN | NO NAT</text>
+
+  <text x="800" y="380" font-size="12" font-weight="bold" fill="#6a4c93">G0/1.30 — VLAN 30</text>
+  <text x="800" y="396" font-size="11" fill="#555555">192.168.59.65/27 | dot1Q 30 | ACL 120 IN | NO NAT</text>
+
+  <!-- Connection: R1 to SW1 -->
+  <line x1="600" y1="380" x2="600" y2="440" stroke="#82b366" stroke-width="4"/>
+  <text x="615" y="415" font-size="12" font-weight="bold" fill="#555555">802.1Q TRUNK — VLAN 10 / 20 / 30</text>
+
+  <!-- Part 7: SW1 (Access Switch) -->
+  <rect x="450" y="440" width="300" height="110" rx="6" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="600" y="465" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">SW1 — Access Switch (2960)</text>
+  
+  <text x="470" y="495" font-size="12" font-weight="bold" fill="#333333">Gi0/1 — TRUNK</text>
+  <text x="470" y="515" font-size="12" fill="#555555">Allowed VLANs: 10, 20, 30</text>
+  <text x="470" y="535" font-size="11" fill="#555555" font-style="italic">See port allocation →</text>
+
+  <!-- Part 11: Switch Port Allocation Box -->
+  <rect x="780" y="440" width="370" height="110" rx="6" fill="#ffffff" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="800" y="465" font-size="13" font-weight="bold" fill="#1a1a1a">SW1 Access Port Allocation</text>
+  <text x="800" y="490" font-size="12" fill="#555555" font-family="monospace">Fa0/1–5    → VLAN 10</text>
+  <text x="800" y="510" font-size="12" fill="#555555" font-family="monospace">Fa0/6–10   → VLAN 20</text>
+  <text x="800" y="530" font-size="12" fill="#555555" font-family="monospace">Fa0/11–15  → VLAN 30</text>
+  <text x="800" y="550" font-size="12" fill="#555555" font-family="monospace">Gi0/1      → 802.1Q Trunk</text>
+
+  <!-- Connections: SW1 to VLANs (Orthogonal draw.io style) -->
+  <path d="M 600 550 L 600 580 L 220 580 L 220 620" fill="none" stroke="#555555" stroke-width="1.5"/>
+  <path d="M 600 550 L 600 620" fill="none" stroke="#555555" stroke-width="1.5"/>
+  <path d="M 600 550 L 600 580 L 980 580 L 980 620" fill="none" stroke="#555555" stroke-width="1.5"/>
+
+  <!-- Part 8: VLAN 10 (Office) -->
+  <rect x="50" y="620" width="340" height="360" rx="6" fill="#fff2cc" stroke="#d6b656" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="220" y="650" text-anchor="middle" font-size="15" font-weight="bold" fill="#b08d00">VLAN 10 — OFFICE DATA</text>
+  
+  <text x="70" y="680" font-size="12" fill="#333333">Network: 192.168.59.0/27</text>
+  <text x="70" y="700" font-size="12" fill="#333333">Gateway: 192.168.59.1</text>
+  <text x="70" y="720" font-size="12" fill="#333333">End Devices: 192.168.59.2–30</text>
+  <text x="70" y="740" font-size="12" fill="#333333">Broadcast: 192.168.59.31</text>
+  
+  <line x1="70" y1="755" x2="370" y2="755" stroke="#d6b656" stroke-width="1" stroke-dasharray="3,3"/>
+  
+  <text x="70" y="775" font-size="12" font-weight="bold" fill="#333333">ACL 100 IN</text>
+  <text x="70" y="795" font-size="12" font-weight="bold" fill="#333333">PAT: YES</text>
+  <text x="70" y="815" font-size="12" font-weight="bold" fill="#333333">Internet Access: YES</text>
+
+  <line x1="70" y1="830" x2="370" y2="830" stroke="#d6b656" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <text x="70" y="855" font-size="12" font-weight="bold" fill="#1a1a1a">Devices:</text>
+  <text x="90" y="880" font-size="12" fill="#555555">PC1 — 192.168.59.2 (Fa0/1)</text>
+  <text x="90" y="905" font-size="12" fill="#555555">PC2 — 192.168.59.3 (Fa0/2)</text>
+  <text x="90" y="930" font-size="12" fill="#555555">Printer — 192.168.59.4 (Fa0/3)</text>
+
+  <!-- Part 9: VLAN 20 (CCTV) -->
+  <rect x="430" y="620" width="340" height="360" rx="6" fill="#f8cecc" stroke="#b85450" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="600" y="650" text-anchor="middle" font-size="15" font-weight="bold" fill="#b85450">VLAN 20 — CCTV</text>
+  
+  <text x="450" y="680" font-size="12" fill="#333333">Network: 192.168.59.32/27</text>
+  <text x="450" y="700" font-size="12" fill="#333333">Gateway: 192.168.59.33</text>
+  <text x="450" y="720" font-size="12" fill="#333333">End Devices: 192.168.59.34–62</text>
+  <text x="450" y="740" font-size="12" fill="#333333">Broadcast: 192.168.59.63</text>
+  
+  <line x1="450" y1="755" x2="750" y2="755" stroke="#b85450" stroke-width="1" stroke-dasharray="3,3"/>
+  
+  <text x="450" y="775" font-size="12" font-weight="bold" fill="#333333">ACL 110 IN</text>
+  <text x="450" y="795" font-size="12" font-weight="bold" fill="#333333">PAT: NO</text>
+  <text x="450" y="815" font-size="12" font-weight="bold" fill="#333333">Internet Access: NO</text>
+
+  <line x1="450" y1="830" x2="750" y2="830" stroke="#b85450" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <text x="450" y="855" font-size="12" font-weight="bold" fill="#1a1a1a">Devices:</text>
+  <text x="470" y="880" font-size="12" fill="#555555">Camera 1 — 192.168.59.34 (Fa0/6)</text>
+  <text x="470" y="905" font-size="12" fill="#555555">Camera 2 — 192.168.59.35 (Fa0/7)</text>
+  <text x="470" y="930" font-size="12" fill="#555555">NVR — 192.168.59.36 (Fa0/8)</text>
+
+  <!-- Part 10: VLAN 30 (IoT) -->
+  <rect x="810" y="620" width="340" height="360" rx="6" fill="#e1d5e7" stroke="#9673a6" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="980" y="650" text-anchor="middle" font-size="15" font-weight="bold" fill="#6a4c93">VLAN 30 — IoT / OPERATIONS</text>
+  
+  <text x="830" y="680" font-size="12" fill="#333333">Network: 192.168.59.64/27</text>
+  <text x="830" y="700" font-size="12" fill="#333333">Gateway: 192.168.59.65</text>
+  <text x="830" y="720" font-size="12" fill="#333333">End Devices: 192.168.59.66–94</text>
+  <text x="830" y="740" font-size="12" fill="#333333">Broadcast: 192.168.59.95</text>
+  
+  <line x1="830" y1="755" x2="1130" y2="755" stroke="#9673a6" stroke-width="1" stroke-dasharray="3,3"/>
+  
+  <text x="830" y="775" font-size="12" font-weight="bold" fill="#333333">ACL 120 IN</text>
+  <text x="830" y="795" font-size="12" font-weight="bold" fill="#333333">PAT: NO</text>
+  <text x="830" y="815" font-size="12" font-weight="bold" fill="#333333">Internet Access: NO</text>
+
+  <line x1="830" y1="830" x2="1130" y2="830" stroke="#9673a6" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <text x="830" y="855" font-size="12" font-weight="bold" fill="#1a1a1a">Devices:</text>
+  <text x="850" y="880" font-size="12" fill="#555555">Sensor 1 — 192.168.59.66 (Fa0/11)</text>
+  <text x="850" y="905" font-size="12" fill="#555555">Sensor 2 — 192.168.59.67 (Fa0/12)</text>
+  <text x="850" y="930" font-size="12" fill="#555555">IoT Controller — 192.168.59.68 (Fa0/13)</text>
+
+  <!-- Part 14: Traffic-denied indicators (draw.io style) -->
+  <!-- Between VLAN 10 and 20 - FIXED to ↔ -->
+  <text x="400" y="780" text-anchor="middle" font-size="32" font-weight="bold" fill="#b85450">✕</text>
+  <text x="400" y="805" text-anchor="middle" font-size="11" font-weight="bold" fill="#b85450">OFFICE ↔ CCTV</text>
+  <text x="400" y="820" text-anchor="middle" font-size="11" font-weight="bold" fill="#b85450">DENIED</text>
+
+  <!-- Between VLAN 10 and 30 - NEW Office ↔ IoT -->
+  <text x="210" y="1010" text-anchor="middle" font-size="32" font-weight="bold" fill="#b85450">✕</text>
+  <text x="210" y="1035" text-anchor="middle" font-size="11" font-weight="bold" fill="#b85450">OFFICE ↔ IoT</text>
+  <text x="210" y="1050" text-anchor="middle" font-size="11" font-weight="bold" fill="#b85450">DENIED</text>
+
+  <!-- Between VLAN 20 and 30 -->
+  <text x="600" y="1010" text-anchor="middle" font-size="32" font-weight="bold" fill="#b85450">✕</text>
+  <text x="600" y="1035" text-anchor="middle" font-size="11" font-weight="bold" fill="#b85450">CCTV ↔ IoT</text>
+  <text x="600" y="1050" text-anchor="middle" font-size="11" font-weight="bold" fill="#b85450">DENIED</text>
+
+  <!-- Below VLAN 20 - FIXED Internet -> External Network -->
+  <text x="790" y="1010" text-anchor="middle" font-size="32" font-weight="bold" fill="#b85450">✕</text>
+  <text x="790" y="1035" text-anchor="middle" font-size="10" font-weight="bold" fill="#b85450">CCTV → EXTERNAL</text>
+  <text x="790" y="1050" text-anchor="middle" font-size="10" font-weight="bold" fill="#b85450">DENIED</text>
+
+  <!-- Below VLAN 30 - FIXED Internet -> External Network -->
+  <text x="980" y="1010" text-anchor="middle" font-size="32" font-weight="bold" fill="#b85450">✕</text>
+  <text x="980" y="1035" text-anchor="middle" font-size="10" font-weight="bold" fill="#b85450">IoT → EXTERNAL</text>
+  <text x="980" y="1050" text-anchor="middle" font-size="10" font-weight="bold" fill="#b85450">DENIED</text>
+
+  <!-- Part 13: ACL / SECURITY POLICY Box -->
+  <rect x="50" y="1080" width="520" height="210" rx="6" fill="#ffffff" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="70" y="1110" font-size="15" font-weight="bold" fill="#1a1a1a">ACL / SECURITY POLICY</text>
+  
+  <text x="70" y="1140" font-size="12" font-weight="bold" fill="#b08d00">ACL 100 — OFFICE</text>
+  <text x="90" y="1160" font-size="12" fill="#555555">• Deny Office → CCTV</text>
+  <text x="90" y="1180" font-size="12" fill="#555555">• Deny Office → IoT</text>
+  <text x="90" y="1200" font-size="12" fill="#555555">• Permit authorised remaining traffic</text>
+
+  <text x="70" y="1230" font-size="12" font-weight="bold" fill="#b85450">ACL 110 — CCTV</text>
+  <text x="90" y="1250" font-size="12" fill="#555555">• Deny CCTV → Office</text>
+  <text x="90" y="1265" font-size="12" fill="#555555">• Deny CCTV → IoT</text>
+  <text x="90" y="1280" font-size="12" fill="#555555">• Deny CCTV → External Network</text>
+
+  <text x="300" y="1230" font-size="12" font-weight="bold" fill="#6a4c93">ACL 120 — IoT / OPERATIONS</text>
+  <text x="320" y="1250" font-size="12" fill="#555555">• Deny IoT → Office</text>
+  <text x="320" y="1265" font-size="12" fill="#555555">• Deny IoT → CCTV</text>
+  <text x="320" y="1280" font-size="12" fill="#555555">• Deny IoT → External Network</text>
+
+  <!-- Part 15: KEY DESIGN POINTS Box -->
+  <rect x="600" y="1080" width="550" height="210" rx="6" fill="#ffffff" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="620" y="1110" font-size="15" font-weight="bold" fill="#1a1a1a">KEY DESIGN POINTS</text>
+  
+  <text x="620" y="1140" font-size="12" fill="#555555">• Router-on-a-Stick architecture</text>
+  <text x="620" y="1160" font-size="12" fill="#555555">• 802.1Q trunk between R1 and SW1</text>
+  <text x="620" y="1180" font-size="12" fill="#555555">• VLAN 10 — Office Data</text>
+  <text x="620" y="1200" font-size="12" fill="#555555">• VLAN 20 — CCTV</text>
+  <text x="620" y="1220" font-size="12" fill="#555555">• VLAN 30 — IoT / Operations</text>
+  <text x="620" y="1240" font-size="12" fill="#555555">• Inter-VLAN traffic controlled by ACLs</text>
+  <text x="620" y="1260" font-size="12" fill="#555555">• PAT enabled for Office VLAN only</text>
+  <text x="880" y="1140" font-size="12" fill="#555555">• CCTV and IoT have no Internet access</text>
+  <text x="880" y="1160" font-size="12" fill="#555555">• No dedicated Management VLAN</text>
+  <text x="880" y="1180" font-size="12" fill="#555555">• Addressing block: 192.168.59.0/24</text>
+
+  <!-- Part 16: LEGEND Box -->
+  <rect x="50" y="1320" width="520" height="160" rx="6" fill="#ffffff" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="70" y="1350" font-size="15" font-weight="bold" fill="#1a1a1a">LEGEND</text>
+  
+  <rect x="70" y="1365" width="20" height="15" fill="#fff2cc" stroke="#d6b656"/>
+  <text x="100" y="1378" font-size="12" fill="#555555">Yellow = VLAN 10 — Office</text>
+  
+  <rect x="70" y="1390" width="20" height="15" fill="#f8cecc" stroke="#b85450"/>
+  <text x="100" y="1403" font-size="12" fill="#555555">Red = VLAN 20 — CCTV</text>
+  
+  <rect x="70" y="1415" width="20" height="15" fill="#e1d5e7" stroke="#9673a6"/>
+  <text x="100" y="1428" font-size="12" fill="#555555">Purple = VLAN 30 — IoT / Operations</text>
+
+  <line x1="320" y1="1372" x2="360" y2="1372" stroke="#82b366" stroke-width="3"/>
+  <text x="370" y="1378" font-size="12" fill="#555555">802.1Q Trunk</text>
+
+  <line x1="320" y1="1397" x2="360" y2="1397" stroke="#555555" stroke-width="1.5"/>
+  <text x="370" y="1403" font-size="12" fill="#555555">Normal connection</text>
+
+  <line x1="320" y1="1422" x2="360" y2="1422" stroke="#d6b656" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="370" y="1428" font-size="12" fill="#555555">NAT/PAT boundary</text>
+
+  <text x="70" y="1460" font-size="11" fill="#555555">✕ Traffic denied | ACL = Access Control List | PAT = Port Address Translation | NAT = Network Address Translation</text>
+
+  <!-- Part 17: Footer -->
+  <rect x="600" y="1320" width="550" height="160" rx="6" fill="#f5f5f5" stroke="#666666" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="620" y="1350" font-size="14" font-weight="bold" fill="#1a1a1a">PROJECT IDENTIFICATION</text>
+  
+  <text x="620" y="1380" font-size="12" fill="#555555">Project ID: CMPG325-2026-138</text>
+  <text x="620" y="1405" font-size="12" fill="#555555">Client ID: CLI-138</text>
+  <text x="620" y="1430" font-size="12" fill="#555555">Student: SITHOLE, TJ (51636654)</text>
+  <text x="620" y="1455" font-size="12" fill="#555555">Organisation: Dithare Car Wash &amp; Detailing Group</text>
+  
+  <text x="920" y="1380" font-size="12" fill="#555555">Location: Potchefstroom</text>
+  <text x="920" y="1405" font-size="12" fill="#555555">Industry: Automotive</text>
+
+</svg>

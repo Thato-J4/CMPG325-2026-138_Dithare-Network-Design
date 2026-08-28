@@ -1,0 +1,80 @@
+<svg viewBox="0 0 1100 780" xmlns="http://www.w3.org/2000/svg" font-family="Verdana, Arial, sans-serif">
+  <rect width="1100" height="780" fill="#ffffff"/>
+  <text x="550" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a1a1a">Physical Topology — Dithare Car Wash &amp; Detailing Group (CLI-138)</text>
+  <text x="550" y="52" text-anchor="middle" font-size="12" fill="#475569">Potchefstroom site — copper Ethernet, single comms point</text>
+
+  <!-- ISP -->
+  <rect x="425" y="70" width="250" height="70" rx="6" fill="#eef2f7" stroke="#334155" stroke-width="1.5"/>
+  <text x="550" y="98" text-anchor="middle" font-size="13" font-weight="bold">Simulated ISP / External Network</text>
+  <text x="550" y="120" text-anchor="middle" font-size="11" fill="#475569">ISP router + external test host</text>
+
+  <line x1="550" y1="140" x2="550" y2="175" stroke="#334155" stroke-width="2"/>
+  <text x="562" y="162" font-size="10" fill="#64748b">WAN copper (R1 G0/0)</text>
+
+  <!-- Comms cabinet -->
+  <rect x="330" y="175" width="440" height="185" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="1.5"/>
+  <text x="550" y="198" text-anchor="middle" font-size="12" font-weight="bold" fill="#334155">Comms point (on-site)</text>
+
+  <rect x="360" y="215" width="180" height="85" rx="6" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.5"/>
+  <text x="450" y="248" text-anchor="middle" font-size="13" font-weight="bold">Edge Router R1</text>
+  <text x="450" y="270" text-anchor="middle" font-size="11" fill="#0369a1">Cisco 2911 · G0/0 WAN · G0/1 LAN</text>
+
+  <rect x="560" y="215" width="180" height="85" rx="6" fill="#f0fdf4" stroke="#15803d" stroke-width="1.5"/>
+  <text x="650" y="248" text-anchor="middle" font-size="13" font-weight="bold">Access Switch SW1</text>
+  <text x="650" y="270" text-anchor="middle" font-size="11" fill="#15803d">Cisco 2960 · access + trunk</text>
+
+  <line x1="540" y1="257" x2="560" y2="257" stroke="#334155" stroke-width="3"/>
+  <text x="550" y="248" text-anchor="middle" font-size="9" fill="#64748b">G0/1–Gi0/1</text>
+  <text x="550" y="330" text-anchor="middle" font-size="10" fill="#64748b">Physical trunk cable (802.1Q tagging is logical)</text>
+
+  <!-- drops -->
+  <line x1="450" y1="360" x2="180" y2="420" stroke="#334155" stroke-width="1.5"/>
+  <line x1="550" y1="360" x2="550" y2="420" stroke="#334155" stroke-width="1.5"/>
+  <line x1="650" y1="360" x2="920" y2="420" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Reception -->
+  <rect x="40" y="420" width="280" height="200" rx="6" fill="#fefce8" stroke="#a16207"/>
+  <text x="180" y="448" text-anchor="middle" font-size="13" font-weight="bold">Reception / Office</text>
+  <text x="180" y="468" text-anchor="middle" font-size="11" fill="#64748b">Bookings and administration</text>
+  <rect x="60" y="490" width="70" height="42" fill="#ffffff" stroke="#a16207"/>
+  <text x="95" y="516" text-anchor="middle" font-size="11">PC 1</text>
+  <rect x="145" y="490" width="70" height="42" fill="#ffffff" stroke="#a16207"/>
+  <text x="180" y="516" text-anchor="middle" font-size="11">PC 2</text>
+  <rect x="230" y="490" width="70" height="42" fill="#ffffff" stroke="#a16207"/>
+  <text x="265" y="516" text-anchor="middle" font-size="11">Printer</text>
+  <text x="180" y="560" text-anchor="middle" font-size="10" fill="#64748b">Cabled to SW1 Fa0/1–Fa0/3</text>
+  <text x="180" y="595" text-anchor="middle" font-size="10" fill="#64748b">Later mapped to VLAN 10</text>
+
+  <!-- Wash bays -->
+  <rect x="410" y="420" width="280" height="200" rx="6" fill="#fef2f2" stroke="#b91c1c"/>
+  <text x="550" y="448" text-anchor="middle" font-size="13" font-weight="bold">Wash bays / Yard</text>
+  <text x="550" y="468" text-anchor="middle" font-size="11" fill="#64748b">Physical security coverage</text>
+  <rect x="430" y="490" width="75" height="42" fill="#ffffff" stroke="#b91c1c"/>
+  <text x="467" y="516" text-anchor="middle" font-size="10">Camera 1</text>
+  <rect x="515" y="490" width="75" height="42" fill="#ffffff" stroke="#b91c1c"/>
+  <text x="552" y="516" text-anchor="middle" font-size="10">Camera 2</text>
+  <rect x="600" y="490" width="70" height="42" fill="#ffffff" stroke="#b91c1c"/>
+  <text x="635" y="516" text-anchor="middle" font-size="11">NVR</text>
+  <text x="550" y="560" text-anchor="middle" font-size="10" fill="#64748b">Cabled to SW1 Fa0/6–Fa0/8</text>
+  <text x="550" y="595" text-anchor="middle" font-size="10" fill="#64748b">Later mapped to VLAN 20</text>
+
+  <!-- Operations -->
+  <rect x="780" y="420" width="280" height="200" rx="6" fill="#f5f3ff" stroke="#6d28d9"/>
+  <text x="920" y="448" text-anchor="middle" font-size="13" font-weight="bold">Operations area</text>
+  <text x="920" y="468" text-anchor="middle" font-size="11" fill="#64748b">CR12 IoT sensors</text>
+  <rect x="800" y="490" width="75" height="42" fill="#ffffff" stroke="#6d28d9"/>
+  <text x="837" y="516" text-anchor="middle" font-size="10">Sensor 1</text>
+  <rect x="885" y="490" width="75" height="42" fill="#ffffff" stroke="#6d28d9"/>
+  <text x="922" y="516" text-anchor="middle" font-size="10">Sensor 2</text>
+  <rect x="970" y="490" width="70" height="50" fill="#ffffff" stroke="#6d28d9"/>
+  <text x="1005" y="510" text-anchor="middle" font-size="9">IoT</text>
+  <text x="1005" y="524" text-anchor="middle" font-size="9">Controller</text>
+  <text x="920" y="560" text-anchor="middle" font-size="10" fill="#64748b">Cabled to SW1 Fa0/11–Fa0/13</text>
+  <text x="920" y="595" text-anchor="middle" font-size="10" fill="#64748b">Later mapped to VLAN 30</text>
+
+  <rect x="40" y="650" width="1020" height="100" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="60" y="678" font-size="12" font-weight="bold" fill="#1a1a1a">Legend</text>
+  <text x="60" y="700" font-size="12" fill="#334155">Solid lines = physical copper cabling. R1 G0/1 to SW1 Gi0/1 is the single LAN uplink.</text>
+  <text x="60" y="720" font-size="12" fill="#334155">VLAN IDs are shown only as the later logical mapping — they are not physical cables.</text>
+  <text x="60" y="740" font-size="12" fill="#334155">Project CMPG325-2026-138 · Student SITHOLE, TJ (51636654)</text>
+</svg>
