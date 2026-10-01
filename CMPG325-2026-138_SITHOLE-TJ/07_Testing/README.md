@@ -6,6 +6,7 @@
 **Client:** Dithare Car Wash & Detailing Group
 **Student:** SITHOLE, TJ
 **Milestone:** Milestone 2 – Client Implementation Review
+**Final Verification Date:** 1 October 2026
 
 ---
 
@@ -22,6 +23,10 @@ The testing covered:
 * NAT/PAT operation
 * ACL operation
 * Router and switch configuration status
+
+The final verification was performed after correcting the relevant end-device addressing and confirming the final Packet Tracer implementation.
+
+Supporting screenshots are stored in the `09_Evidence/` directory.
 
 ---
 
@@ -91,7 +96,56 @@ This confirms that the NVR can communicate with its VLAN gateway.
 
 ---
 
-## 5. Inter-VLAN Traffic Restriction
+### NVR → Camera1
+
+**Source:** NVR `192.168.59.36`
+**Destination:** Camera1 `192.168.59.34`
+
+Result:
+
+```text
+Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+```
+
+This confirms internal connectivity between the NVR and Camera1 within the CCTV VLAN.
+
+---
+
+### NVR → Camera2
+
+**Source:** NVR `192.168.59.36`
+**Destination:** Camera2 `192.168.59.35`
+
+Result:
+
+```text
+Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+```
+
+This confirms internal connectivity between the NVR and Camera2 within the CCTV VLAN.
+
+---
+
+## 5. IoT/Operations Gateway Connectivity
+
+### R1 → IoT Controller
+
+**Source:** R1
+**Destination:** IoT Controller `192.168.59.68`
+
+The first test produced an initial packet loss while the device was being resolved. The test was immediately repeated.
+
+Final repeat result:
+
+```text
+Packets: Sent = 5, Received = 5, Lost = 0 (0% loss)
+```
+
+This confirms that the IoT Controller is reachable through the VLAN 30 gateway.
+
+---
+
+## 6. Inter-VLAN Traffic Restriction
 
 The network design requires CCTV and IoT/Operations traffic to remain separated from the Office network.
 
@@ -108,6 +162,8 @@ Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
 
 The packets were rejected by the Office VLAN traffic restrictions.
 
+This confirms that Office traffic cannot directly access the CCTV network.
+
 ---
 
 ### PC1 → IoT Controller
@@ -123,11 +179,11 @@ Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
 
 The packets were rejected by the Office VLAN traffic restrictions.
 
-These tests confirm that Office traffic cannot directly access the CCTV or IoT/Operations networks.
+This confirms that Office traffic cannot directly access the IoT/Operations network.
 
 ---
 
-## 6. CCTV Isolation Testing
+## 7. CCTV Isolation Testing
 
 The NVR was tested against devices outside the CCTV VLAN.
 
@@ -142,6 +198,8 @@ Result:
 Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
 ```
 
+This confirms that CCTV traffic is prevented from reaching the Office network.
+
 ---
 
 ### NVR → IoT Controller
@@ -154,6 +212,8 @@ Result:
 ```text
 Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
 ```
+
+This confirms that CCTV traffic is prevented from reaching the IoT/Operations network.
 
 ---
 
@@ -168,11 +228,13 @@ Result:
 Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
 ```
 
-These results confirm that CCTV traffic is restricted from the Office, IoT/Operations, and external networks.
+This confirms that CCTV traffic is restricted from reaching the external network.
+
+These tests confirm that CCTV traffic is restricted from the Office, IoT/Operations, and external networks.
 
 ---
 
-## 7. IoT/Operations Isolation Testing
+## 8. IoT/Operations Isolation Testing
 
 A temporary test host was connected to SW1 Fa0/14 in VLAN 30 during testing.
 
@@ -223,35 +285,37 @@ These tests confirm that the IoT/Operations VLAN is isolated from the Office, CC
 
 ---
 
-## 8. External Connectivity
+## 9. External Connectivity
 
 ### PC1 → External-PC
 
 **Source:** PC1 `192.168.59.2`
 **Destination:** External-PC `203.0.113.6`
 
-The first test produced:
+An earlier test produced:
 
 ```text
 Packets: Sent = 4, Received = 3, Lost = 1 (25% loss)
 ```
 
-The test was repeated immediately afterwards and produced:
+This was followed by an immediate repeat test.
+
+The final clean verification produced:
 
 ```text
 Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
-Average = 6 ms
+Average = 0 ms
 ```
 
-The successful repeat test confirms that Office traffic can reach the simulated external network.
+The successful final test confirms that Office traffic can reach the simulated external network.
 
 ---
 
-## 9. NAT/PAT Verification
+## 10. NAT/PAT Verification
 
 NAT/PAT was verified by generating external traffic from PC1 to External-PC.
 
-### Test
+### Test Path
 
 ```text
 PC1 192.168.59.2
@@ -268,26 +332,30 @@ R1 G0/0 203.0.113.2
 External-PC 203.0.113.6
 ```
 
+The Office VLAN is configured as the NAT inside network, while R1 `GigabitEthernet0/0` is configured as the NAT outside interface.
+
 After the successful ping, the following command was executed on R1:
 
 ```text
 show ip nat translations
 ```
 
-The resulting translations included entries similar to:
+The final test produced four dynamic ICMP translations:
 
 ```text
-icmp  203.0.113.2:9   192.168.59.2:9   203.0.113.6:9   203.0.113.6:9
-icmp  203.0.113.2:10  192.168.59.2:10  203.0.113.6:10  203.0.113.6:10
-icmp  203.0.113.2:11  192.168.59.2:11  203.0.113.6:11  203.0.113.6:11
-icmp  203.0.113.2:12  192.168.59.2:12  203.0.113.6:12  203.0.113.6:12
+icmp  203.0.113.2:29  192.168.59.2:29  203.0.113.6:29  203.0.113.6:29
+icmp  203.0.113.2:30  192.168.59.2:30  203.0.113.6:30  203.0.113.6:30
+icmp  203.0.113.2:31  192.168.59.2:31  203.0.113.6:31  203.0.113.6:31
+icmp  203.0.113.2:32  192.168.59.2:32  203.0.113.6:32  203.0.113.6:32
 ```
 
 This demonstrates that the internal Office address `192.168.59.2` was translated to R1's outside address `203.0.113.2`.
 
+The translation table therefore provides direct evidence that PAT was operating on Office traffic.
+
 ---
 
-## 10. NAT Statistics
+## 11. NAT Statistics
 
 The following command was used:
 
@@ -295,7 +363,7 @@ The following command was used:
 show ip nat statistics
 ```
 
-Immediately after the clean PAT test, the output showed:
+During the final verification, the NAT statistics showed:
 
 ```text
 Total translations: 4 (0 static, 4 dynamic, 4 extended)
@@ -303,13 +371,15 @@ Outside Interfaces: GigabitEthernet0/0
 Inside Interfaces: GigabitEthernet0/1.10
 ```
 
+The statistics also recorded NAT hits during testing.
+
 The presence of dynamic and extended translations confirms that PAT was operating.
 
-NAT translations can expire after the traffic stops. Therefore, an empty translation table after some time does not indicate that the configuration has failed; a fresh traffic test recreates the dynamic entries.
+NAT translations can expire after the traffic stops. Therefore, an empty translation table after some time does not indicate that the configuration has failed. A fresh traffic test recreates the dynamic entries.
 
 ---
 
-## 11. ACL Verification
+## 12. ACL Verification
 
 The ACL counters were also checked using:
 
@@ -343,9 +413,11 @@ deny IoT → external     4 matches
 
 This confirms that the IoT/Operations isolation rules were actively processing the test traffic.
 
+ACL 100 was also used to enforce the Office restrictions tested from PC1 to the CCTV and IoT/Operations networks.
+
 ---
 
-## 12. Router and Switch Verification
+## 13. Router and Switch Verification
 
 The following commands were used during implementation and testing:
 
@@ -371,35 +443,68 @@ The results confirmed that:
 
 ---
 
-## 13. Test Summary
+## 14. Test Summary
 
-| Test                      | Expected Result     | Actual Result |
-| ------------------------- | ------------------- | ------------- |
-| PC1 → PC2                 | Allowed             | Pass          |
-| PC1 → Printer             | Allowed             | Pass          |
-| PC1 → Office gateway      | Allowed             | Pass          |
-| NVR → CCTV gateway        | Allowed             | Pass          |
-| PC1 → Camera1             | Blocked             | Pass          |
-| PC1 → IoT Controller      | Blocked             | Pass          |
-| NVR → PC1                 | Blocked             | Pass          |
-| NVR → IoT Controller      | Blocked             | Pass          |
-| NVR → External-PC         | Blocked             | Pass          |
-| IoT → Office              | Blocked             | Pass          |
-| IoT → CCTV                | Blocked             | Pass          |
-| IoT → External-PC         | Blocked             | Pass          |
-| PC1 → External-PC         | Allowed through PAT | Pass          |
-| NAT translation generated | Required            | Pass          |
-| ACL 110 deny counters     | Required            | Pass          |
-| ACL 120 deny counters     | Required            | Pass          |
+| Test                      | Expected Result     | Actual Result                 |
+| ------------------------- | ------------------- | ----------------------------- |
+| PC1 → PC2                 | Allowed             | Pass — 4/4, 0% loss           |
+| PC1 → Printer             | Allowed             | Pass — 4/4, 0% loss           |
+| PC1 → Office gateway      | Allowed             | Pass — 4/4, 0% loss           |
+| NVR → CCTV gateway        | Allowed             | Pass — 4/4, 0% loss           |
+| NVR → Camera1             | Allowed             | Pass — 4/4, 0% loss           |
+| NVR → Camera2             | Allowed             | Pass — 4/4, 0% loss           |
+| R1 → IoT Controller       | Allowed             | Pass — 5/5, 0% loss on repeat |
+| PC1 → Camera1             | Blocked             | Pass                          |
+| PC1 → IoT Controller      | Blocked             | Pass                          |
+| NVR → PC1                 | Blocked             | Pass                          |
+| NVR → IoT Controller      | Blocked             | Pass                          |
+| NVR → External-PC         | Blocked             | Pass                          |
+| IoT → Office              | Blocked             | Pass                          |
+| IoT → CCTV                | Blocked             | Pass                          |
+| IoT → External-PC         | Blocked             | Pass                          |
+| PC1 → External-PC         | Allowed through PAT | Pass — 4/4, 0% loss           |
+| NAT translation generated | Required            | Pass                          |
+| Dynamic NAT translations  | Required            | Pass — 4 observed             |
+| NAT inside interface      | G0/1.10             | Verified                      |
+| NAT outside interface     | G0/0                | Verified                      |
+| ACL 110 deny counters     | Required            | Pass                          |
+| ACL 120 deny counters     | Required            | Pass                          |
 
 ---
 
-## 14. Conclusion
+## 15. Evidence References
 
-The testing confirms that the implemented network performs the required routing, segmentation, external connectivity, and NAT/PAT functions.
+Supporting screenshots for the final verification are stored in the `09_Evidence/` directory:
 
-The Office VLAN can access the simulated external network through PAT, while CCTV and IoT/Operations traffic are restricted according to the network design.
+| Evidence              | File                            |
+| --------------------- | ------------------------------- |
+| Final topology        | `01_final_topology.png`         |
+| VLAN configuration    | `02_vlan_configuration.png`     |
+| Trunk configuration   | `03_trunk_configuration.png`    |
+| Office connectivity   | `04_office_connectivity.png`    |
+| CCTV connectivity     | `05_cctv_connectivity.png`      |
+| Office → CCTV blocked | `06_office_to_cctv_blocked.png` |
+| Office → IoT blocked  | `07_office_to_iot_blocked.png`  |
+| CCTV isolation        | `08_cctv_isolation.png`         |
+| NAT translations      | `09_nat_translations.png`       |
+| NAT statistics        | `10_nat_statistics.png`         |
 
-The successful NAT translation and NAT statistics provide direct evidence that the assigned NAT/PAT challenge was implemented and verified.
+These screenshots provide supporting evidence for the configuration and testing results documented in this README.
+
+---
+
+## 16. Conclusion
+
+The final testing confirms that the implemented network performs the required routing, segmentation, external connectivity, and NAT/PAT functions.
+
+The Office VLAN can communicate internally and access the simulated external network through PAT.
+
+The CCTV VLAN can communicate with its own devices while traffic to the Office, IoT/Operations, and external networks is restricted according to the network design.
+
+The IoT/Operations VLAN is isolated from the Office, CCTV, and external networks.
+
+The successful NAT translation table and NAT statistics provide direct evidence that the assigned NAT/PAT challenge was implemented and verified.
 
 The ACL match counters provide additional evidence that the configured traffic restrictions were actively applied during testing.
+
+The final Packet Tracer implementation and supporting evidence are stored in the project GitHub repository.
