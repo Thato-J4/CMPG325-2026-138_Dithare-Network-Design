@@ -70,10 +70,10 @@ The logical structure is:
 The internal `192.168.59.0/24` address block is divided into `/27` subnets.
 
 | VLAN ID | Name             | Network            | Default Gateway | Purpose                                         |
-| ------: | ---------------- | ------------------ | --------------- | ----------------------------------------------- |
-|      10 | Office Data      | `192.168.59.0/27`  | `192.168.59.1`  | Staff PCs, printer, administration and bookings |
-|      20 | CCTV             | `192.168.59.32/27` | `192.168.59.33` | Security cameras and NVR                        |
-|      30 | IoT / Operations | `192.168.59.64/27` | `192.168.59.65` | Operational sensors and IoT controller          |
+| ------- | ---------------- | ------------------ | --------------- | ----------------------------------------------- |
+| 10      | Office Data      | `192.168.59.0/27`  | `192.168.59.1`  | Staff PCs, printer, administration and bookings |
+| 20      | CCTV             | `192.168.59.32/27` | `192.168.59.33` | Security cameras and NVR                        |
+| 30      | IoT / Operations | `192.168.59.64/27` | `192.168.59.65` | Operational sensors and IoT controller          |
 
 ### VLAN 10 — Office Data
 
@@ -114,10 +114,10 @@ No dedicated Management VLAN is included. This is consistent with the project sc
 ## 4. IP Addressing Plan
 
 | VLAN | Network Address | Subnet Mask       | Default Gateway | Usable Host Range (End Devices) | Broadcast       |
-| ---: | --------------- | ----------------- | --------------- | ------------------------------- | --------------- |
-|   10 | `192.168.59.0`  | `255.255.255.224` | `192.168.59.1`  | `192.168.59.2 – 192.168.59.30`  | `192.168.59.31` |
-|   20 | `192.168.59.32` | `255.255.255.224` | `192.168.59.33` | `192.168.59.34 – 192.168.59.62` | `192.168.59.63` |
-|   30 | `192.168.59.64` | `255.255.255.224` | `192.168.59.65` | `192.168.59.66 – 192.168.59.94` | `192.168.59.95` |
+| ---- | --------------- | ----------------- | --------------- | -------------------------------- | --------------- |
+| 10   | `192.168.59.0`  | `255.255.255.224` | `192.168.59.1`  | `192.168.59.2 – 192.168.59.30`  | `192.168.59.31` |
+| 20   | `192.168.59.32` | `255.255.255.224` | `192.168.59.33` | `192.168.59.34 – 192.168.59.62` | `192.168.59.63` |
+| 30   | `192.168.59.64` | `255.255.255.224` | `192.168.59.65` | `192.168.59.66 – 192.168.59.94` | `192.168.59.95` |
 
 Each `/27` subnet provides **30 usable host addresses**. The default gateway is an assigned router address and is therefore excluded from the end-device host range.
 
@@ -230,7 +230,7 @@ The intended ACL placement is:
 
 **Enforcement:** ACL 100 is applied inbound on `G0/1.10`, ACL 110 inbound on `G0/1.20`, and ACL 120 inbound on `G0/1.30`. This provides a defined Layer 3 enforcement point for each VLAN and ensures that the segmentation policy is implemented consistently in both traffic directions.
 
-All three subinterfaces require explicit ACL enforcement because each VLAN is a possible source of routed traffic. Applying ACLs only to CCTV and IoT would leave Office-originated traffic controlled while failing to provide an equivalent source-side enforcement point for traffic originating from those other segments. The three-ACL design therefore makes the security policy explicit, provides a source-side Layer 3 enforcement point for each VLAN, and makes the configuration easier to verify during implementation.
+All three subinterfaces require explicit ACL enforcement because each VLAN is a possible source of routed traffic. Applying ACLs only to CCTV and IoT would leave Office-originated traffic controlled while failing to provide an equivalent source-side enforcement point for traffic originating from those other segments. The three-ACL design therefore makes the security policy explicit, symmetrical at the VLAN boundaries, and easier to verify during implementation.
 
 The exact Cisco IOS ACL commands will be implemented and verified during the Packet Tracer configuration stage.
 
@@ -259,8 +259,6 @@ The NAT matching ACL permits only the Office subnet:
 access-list 10 permit 192.168.59.0 0.0.0.31
 ip nat inside source list 10 interface GigabitEthernet0/0 overload
 ```
-
-**ACL numbering clarification:** `ACL 10` is reserved for the NAT source-matching rule and is separate from the segmentation ACLs `ACL 100`, `ACL 110` and `ACL 120`. These ACLs serve different purposes and therefore use different numbers to avoid configuration ambiguity.
 
 The design deliberately excludes CCTV and IoT/Operations from NAT.
 
@@ -376,13 +374,31 @@ IoT/Operations traffic is not translated by NAT and is denied external access.
 
 ## 11. Logical Topology Diagram
 
-![Logical Topology](logical_topology.png)
+The logical topology diagram is stored separately as:
 
-The SVG version of the diagram is retained as the editable source:
+```text
+logical_topology.svg
+```
 
-[logical_topology.svg](logical_topology.svg)
+It should show:
 
-The diagram shows R1, the NAT boundary, 802.1Q trunk, three VLANs with addressing, ACL policy and denied inter-segment / Internet paths.
+* R1 Edge Router
+* R1 G0/0 external/WAN connection
+* R1 G0/1 trunk
+* R1 subinterfaces G0/1.10, G0/1.20 and G0/1.30
+* SW1 access switch
+* VLAN 10 Office Data
+* VLAN 20 CCTV
+* VLAN 30 IoT/Operations
+* IP networks and default gateways
+* NAT boundary
+* Major traffic restrictions
+
+The Markdown reference is:
+
+```markdown
+![Logical Topology](logical_topology.svg)
+```
 
 ---
 
@@ -439,7 +455,7 @@ This is sufficient for the representative devices while leaving additional addre
 | CCTV devices           | VLAN 20                        |
 | IoT/Operations devices | VLAN 30                        |
 
-The logical topology must remain consistent with the physical topology documented in `02_Physical_Topology/physical_topology.md`.
+The logical topology must remain consistent with the physical topology documented in `02_Physical_Topology/Physical_Topology.md`.
 
 ---
 
@@ -489,18 +505,18 @@ Detailed testing procedures, command output and evidence screenshots should be d
 | Office external access           | VLAN 10 is permitted to reach the simulated external network               |
 | NAT challenge                    | PAT/NAT overload is implemented on R1 for the Office subnet                |
 | Assigned `192.168.59.0/24` block | Address space is subnetted into `/27` VLAN networks                        |
-| Single-site scale                | Router-on-a-stick uses one edge router and one access switch               |
+| Small-site design constraint     | Router-on-a-stick uses the existing single router and switch               |
 | No dedicated management VLAN     | Management remains outside the project VLAN scope                          |
 
 ---
 
 ## 17. Related Project Documents
 
-* [`../01_Client_Requirements/01-client-requirements.md`](../01_Client_Requirements/01-client-requirements.md)
-* [`../02_Physical_Topology/physical_topology.md`](../02_Physical_Topology/physical_topology.md)
-* [`../02_Physical_Topology/physical_topology.svg`](../02_Physical_Topology/physical_topology.svg)
-* [`../04_IP_Addressing/IP_Addressing_Plan.md`](../04_IP_Addressing/IP_Addressing_Plan.md)
-* [`logical_topology.svg`](logical_topology.svg)
+* `../01_Client_Requirements/Client_Requirements.md` — Client requirements, constraints and design decisions
+* `../02_Physical_Topology/Physical_Topology.md` — Physical devices and connections
+* `../02_Physical_Topology/physical_topology.svg` — Physical topology diagram
+* `../04_IP_Addressing/IP_Addressing_Plan.md` — Full IP addressing scheme
+* `logical_topology.svg` — Logical topology diagram
 
 ---
 
@@ -508,9 +524,6 @@ Detailed testing procedures, command output and evidence screenshots should be d
 
 | Version | Date       | Author      | Changes                                                                                                                 |
 | ------- | ---------- | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 1.0     | 2026-08-20 | SITHOLE, TJ | Initial logical topology documentation for Milestone 1                                                                  |
-| 1.1     | 2026-08-20 | SITHOLE, TJ | Corrected NAT, routing and ACL design; aligned logical topology with project requirements                               |
-| 1.2     | 2026-08-22 | SITHOLE, TJ | Finalised IP host ranges, ACL enforcement rationale, document references, verification scope and Milestone 1 formatting |
-| 1.3     | 2026-08-24 | SITHOLE, TJ | Embedded logical diagram; corrected related-document paths                                                              |
-| 1.4     | 2026-08-27 | SITHOLE, TJ | Corrected physical filename; design-constraint wording in traceability                                                  |
-| 1.5     | 2026-08-28 | SITHOLE, TJ | Changed Markdown diagram preview to PNG, retained SVG as editable source, and clarified NAT ACL numbering               |
+| 1.0     | 2026-08-27 | SITHOLE, TJ | Initial logical topology documentation for Milestone 1                                                                  |
+| 1.1     | 2026-08-27 | SITHOLE, TJ | Corrected NAT, routing and ACL design; aligned logical topology with project requirements                               |
+| 1.2     | 2026-08-28 | SITHOLE, TJ | Finalised IP host ranges, ACL enforcement rationale, document references, verification scope and Milestone 1 formatting |

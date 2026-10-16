@@ -260,6 +260,15 @@ Applied inbound to:
 GigabitEthernet0/1.20
 ```
 
+Verified ACL entries:
+
+```text
+access-list 110 permit ip 192.168.59.32 0.0.0.31 192.168.59.32 0.0.0.31
+access-list 110 deny ip 192.168.59.32 0.0.0.31 192.168.59.0 0.0.0.31
+access-list 110 deny ip 192.168.59.32 0.0.0.31 192.168.59.64 0.0.0.31
+access-list 110 deny ip 192.168.59.32 0.0.0.31 any
+```
+
 ---
 
 ### ACL 120 – IoT/Operations
@@ -270,6 +279,15 @@ Applied inbound to:
 
 ```text
 GigabitEthernet0/1.30
+```
+
+Verified ACL entries:
+
+```text
+access-list 120 permit ip 192.168.59.64 0.0.0.31 192.168.59.64 0.0.0.31
+access-list 120 deny ip 192.168.59.64 0.0.0.31 192.168.59.0 0.0.0.31
+access-list 120 deny ip 192.168.59.64 0.0.0.31 192.168.59.32 0.0.0.31
+access-list 120 deny ip 192.168.59.64 0.0.0.31 any
 ```
 
 ---
@@ -335,4 +353,3 @@ The results confirmed that:
 * The simulated external network is reachable through the ISP.
 
 Detailed connectivity and NAT/PAT test results are documented in the Testing section.
-

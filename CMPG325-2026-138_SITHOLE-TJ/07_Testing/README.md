@@ -6,7 +6,9 @@
 **Client:** Dithare Car Wash & Detailing Group
 **Student:** SITHOLE, TJ
 **Milestone:** Milestone 2 – Client Implementation Review
-**Final Verification Date:** 1 October 2026
+**Final Verification Date:** 2 October 2026
+
+The final submission verification completed on 16 October 2026 is documented in [`Milestone3_Final_Verification.md`](Milestone3_Final_Verification.md). It supplements this Milestone 2 record and distinguishes the final live checks from earlier tests.
 
 ---
 
@@ -353,6 +355,8 @@ This demonstrates that the internal Office address `192.168.59.2` was translated
 
 The translation table therefore provides direct evidence that PAT was operating on Office traffic.
 
+The verified translation screenshot `../09_Evidence/nat_translations_verified.png` shows four dynamic ICMP entries for PC1 (`192.168.59.2`) to External-PC (`203.0.113.6`), translated through R1 outside address `203.0.113.2`. ICMP identifiers can differ between captures because they are generated for each test.
+
 ---
 
 ## 11. NAT Statistics
@@ -414,6 +418,17 @@ deny IoT → external     4 matches
 This confirms that the IoT/Operations isolation rules were actively processing the test traffic.
 
 ACL 100 was also used to enforce the Office restrictions tested from PC1 to the CCTV and IoT/Operations networks.
+
+After the final Office tests, `show access-lists` reported the following ACL 100 counters:
+
+```text
+ACL 10 permit 192.168.59.0 0.0.0.31 — 16 matches
+ACL 100 deny Office → CCTV — 4 matches
+ACL 100 deny Office → IoT — 4 matches
+ACL 100 permit Office → any — 8 matches
+```
+
+The four matches on each deny entry align with the four attempted packets in the corresponding blocked-ping tests. The permit counter reflects other Office traffic and is not assigned to a single test. The translated NAT screenshot and statistics are also available as `../09_Evidence/nat_translations_verified.png` and `../09_Evidence/nat_statistics_verified.png`.
 
 ---
 

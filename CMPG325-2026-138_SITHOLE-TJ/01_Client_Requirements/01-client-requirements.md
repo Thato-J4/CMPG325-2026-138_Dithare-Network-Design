@@ -184,12 +184,12 @@ This leaves a significant portion of the assigned /24 block available for future
 
 | Device | Interface | IP Address | Subnet Mask | Connected To |
 |---|---|---|---|---|
-| Edge Router (R1) | GigabitEthernet0/0 — NAT outside | 203.0.113.2 | 255.255.255.252 | Simulated ISP (`203.0.113.1`) |
-| Edge Router (R1) | GigabitEthernet0/1.10 — Office | 192.168.59.1 | 255.255.255.224 | Office VLAN 10 |
-| Edge Router (R1) | GigabitEthernet0/1.20 — CCTV | 192.168.59.33 | 255.255.255.224 | CCTV VLAN 20 |
-| Edge Router (R1) | GigabitEthernet0/1.30 — IoT | 192.168.59.65 | 255.255.255.224 | IoT VLAN 30 |
+| Edge Router | GigabitEthernet0/0 — Outside | DHCP / simulated ISP address | As provided by ISP | Simulated External Network |
+| Edge Router | GigabitEthernet0/1.10 — Office | 192.168.59.1 | 255.255.255.224 | Office VLAN |
+| Edge Router | GigabitEthernet0/1.20 — CCTV | 192.168.59.33 | 255.255.255.224 | CCTV VLAN |
+| Edge Router | GigabitEthernet0/1.30 — IoT | 192.168.59.65 | 255.255.255.224 | IoT VLAN |
 
-The WAN uses documentation prefix `203.0.113.0/30` (TEST-NET-3). It is not taken from the assigned `192.168.59.0/24` block. Full host tables are in `04_IP_Addressing/IP_Addressing_Plan.md`.
+**Note:** The exact outside interface addressing will be determined when the simulated external network is built in Packet Tracer.
 
 ### 8.4 Example Device Addressing
 
@@ -283,10 +283,10 @@ The following assumptions are made only where the project brief does not provide
 | ID | Assumption |
 |---|---|
 | A1 | The project brief does not specify the exact number of office users, CCTV cameras or IoT sensors. Representative quantities will therefore be used for the Packet Tracer demonstration. |
-| A2 | The external network required for NAT testing will be simulated within Cisco Packet Tracer using `203.0.113.0/30`. |
+| A2 | The external network required for NAT testing will be simulated within Cisco Packet Tracer. |
 | A3 | Devices will initially use static IPv4 addressing unless the project brief specifically requires DHCP. |
-| A4 | An external test host IP on the ISP side will be recorded when the Packet Tracer file is built. |
-| A5 | ACLs are required to enforce Layer 3 isolation once router-on-a-stick is in use; they support the constraint and CR12 and are not the assigned technical challenge. |
+| A4 | The exact external interface addressing will depend on the simulated ISP/external network created during implementation. |
+| A5 | ACLs will only be introduced if required to enforce the segmentation requirements identified in the brief. |
 
 ---
 
@@ -316,4 +316,3 @@ The implementation and testing stages will verify whether the proposed design sa
 | 1.1 | 2026-08-25 | SITHOLE, TJ | Revised requirements, design constraints and addressing plan |
 | 1.2 | 2026-08-25 | SITHOLE, TJ | Added requirements traceability and clarified project scope |
 | 1.3 | 2026-08-25 | SITHOLE, TJ | Final Milestone 1 version; clarified segmentation, NAT/PAT, routing and assumptions |
-| 1.4 | 2026-08-28 | SITHOLE, TJ | Aligned WAN/NAT outside addressing with the IP plan (`203.0.113.0/30`) |

@@ -1,240 +1,118 @@
-# IP Addressing Plan
-
-**Project ID:** CMPG325-2026-138
-**Client ID:** CLI-138
+# IP Addressing Plan — Dithare Car Wash & Detailing Group
+**Project ID:** CMPG325-2026-138 | **Client ID:** CLI-138
 **Student:** SITHOLE, TJ (51636654)
-**Organisation:** Dithare Car Wash & Detailing Group (Potchefstroom)
-**Industry:** Automotive
-**Assigned addressing block:** `192.168.59.0/24`
+**Organisation:** Dithare Car Wash & Detailing Group | **Location:** Potchefstroom
+**Addressing Block:** 192.168.59.0/24
+**Logical Topology Reference:** DITHARE_FINAL_diagramsnet_style.svg (Final Approved)
 
-This plan is the addressing source of truth for Milestone 1. Device IPs, VLANs and gateways here must match the logical topology and the later Packet Tracer build.
+## Step 1 — Master Addressing Block
+- **Addressing Block:** 192.168.59.0/24
+- Network: 192.168.59.0 | Mask: 255.255.255.0 | Total: 256 | Usable: 254
+- Range: 192.168.59.1 – 192.168.59.254 | Broadcast: 192.168.59.255
+- Subnetting: Divide /24 into /27s (32 addresses, 30 usable each) for VLAN 10,20,30
 
----
+## Step 2 — VLAN 10: Office Data — 192.168.59.0/27
+| Item | Value |
+|------|-------|
+| Network address | 192.168.59.0 |
+| Subnet mask | 255.255.255.224 (/27) |
+| Default gateway | 192.168.59.1 (R1 G0/1.10) |
+| Usable host range | 192.168.59.2 – 192.168.59.30 |
+| Broadcast address | 192.168.59.31 |
+| VLAN | 10 |
+| Purpose | Office Data |
 
-## 1. Addressing objectives
+**Devices:**
+| Device | IP Address | Switch Port |
+|--------|------------|-------------|
+| R1 G0/1.10 | 192.168.59.1 | — Gateway |
+| PC1 | 192.168.59.2 | Fa0/1 |
+| PC2 | 192.168.59.3 | Fa0/2 |
+| Printer | 192.168.59.4 | Fa0/3 |
 
-| Objective                       | How it is met                                                    |
-| ------------------------------- | ---------------------------------------------------------------- |
-| Stay inside the assigned block  | All internal networks are carved from `192.168.59.0/24`          |
-| Segment Office from CCTV        | Separate `/27` subnets and VLANs                                 |
-| Isolate IoT / operations (CR12) | Dedicated `/27` subnet and VLAN                                  |
-| Support NAT inside/outside      | Private Office addresses translate on R1 toward `203.0.113.0/30` |
-| Leave room for growth           | Unused `/27`s remain in the `/24`                                |
-| Keep the scheme easy to verify  | Equal `/27`s, gateway = first usable address in each subnet      |
+Note: .1 belongs to router, first end device starts at .2. Ports Fa0/4–5 allocated to VLAN 10 but no IP assigned (allocation ≠ active device).
 
-The WAN link is **not** taken from `192.168.59.0/24`. A documentation prefix (`203.0.113.0/30`, TEST-NET-3) is used so NAT inside (private) and NAT outside (public-style) addresses are visually distinct.
+## Step 3 — VLAN 20: CCTV — 192.168.59.32/27
+| Item | Value |
+|------|-------|
+| Network address | 192.168.59.32 |
+| Subnet mask | 255.255.255.224 (/27) |
+| Default gateway | 192.168.59.33 (R1 G0/1.20) |
+| Usable host range | 192.168.59.34 – 192.168.59.62 |
+| Broadcast address | 192.168.59.63 |
+| VLAN | 20 |
+| Purpose | CCTV |
 
----
+**Devices:**
+| Device | IP Address | Switch Port |
+|--------|------------|-------------|
+| R1 G0/1.20 | 192.168.59.33 | — Gateway |
+| Camera 1 | 192.168.59.34 | Fa0/6 |
+| Camera 2 | 192.168.59.35 | Fa0/7 |
+| NVR | 192.168.59.36 | Fa0/8 |
 
-## 2. Master block — `192.168.59.0/24`
+Note: .33 is gateway, end devices begin at .34. Ports Fa0/9–10 allocated to VLAN 20 but no IP assigned.
 
-| Item                                | Value            |
-| ----------------------------------- | ---------------- |
-| Network address                     | `192.168.59.0`   |
-| Subnet mask                         | `255.255.255.0`  |
-| Prefix                              | `/24`            |
-| Total addresses                     | 256              |
-| Usable host addresses (unsubnetted) | 254              |
-| First usable                        | `192.168.59.1`   |
-| Last usable                         | `192.168.59.254` |
-| Broadcast                           | `192.168.59.255` |
+## Step 4 — VLAN 30: IoT / Operations — 192.168.59.64/27
+| Item | Value |
+|------|-------|
+| Network address | 192.168.59.64 |
+| Subnet mask | 255.255.255.224 (/27) |
+| Default gateway | 192.168.59.65 (R1 G0/1.30) |
+| Usable host range | 192.168.59.66 – 192.168.59.94 |
+| Broadcast address | 192.168.59.95 |
+| VLAN | 30 |
+| Purpose | IoT / Operations |
 
----
+**Devices:**
+| Device | IP Address | Switch Port |
+|--------|------------|-------------|
+| R1 G0/1.30 | 192.168.59.65 | — Gateway |
+| Sensor 1 | 192.168.59.66 | Fa0/11 |
+| Sensor 2 | 192.168.59.67 | Fa0/12 |
+| IoT Controller | 192.168.59.68 | Fa0/13 |
 
-## 3. Subnetting method
+Note: .65 is gateway, end devices begin at .66. Ports Fa0/14–15 allocated to VLAN 30 but no IP assigned.
 
-The `/24` is divided into equal `/27` subnets.
+## Step 5 — WAN / External Network — 203.0.113.0/30
+Separate from internal 192.168.59.0/24 block.
 
-| Calculation                    | Result        |
-| ------------------------------ | ------------- |
-| Host bits in a `/27`           | 5 (`32 − 27`) |
-| Addresses per subnet           | 2^5 = 32      |
-| Usable hosts per subnet        | 30            |
-| Subnet increment               | 32            |
-| Subnets available in the `/24` | 8             |
+| Device/Interface | IP Address | Role |
+|------------------|------------|------|
+| Network | 203.0.113.0/30 | WAN |
+| ISP Router | 203.0.113.1/30 | External gateway |
+| R1 G0/0 | 203.0.113.2/30 | NAT Outside |
+| Broadcast | 203.0.113.3 | Broadcast |
 
-**Why `/27` rather than smaller or larger prefixes**
+/30 provides exactly 2 usable addresses — ideal for point-to-point WAN. R1 default route: ip route 0.0.0.0 0.0.0.0 203.0.113.1
+NAT: ip nat inside source list 10 interface G0/0 overload, access-list 10 permit 192.168.59.0 0.0.0.31 (only VLAN 10 Office)
 
-* A `/26` (62 hosts) wastes more of a 256-address block on three small groups of devices.
-* A `/28` (14 hosts) is tight once extra cameras, sensors or PCs are added during testing.
-* A `/27` (30 hosts) fits the Packet Tracer set, matches a small car-wash site, and still leaves five unused `/27`s for later growth.
+## Step 6 — Master IP Addressing Table (Submission Table)
+| VLAN / Network | Device | Interface | IP Address | Mask | Gateway | Purpose |
+|----------------|--------|-----------|------------|------|---------|---------|
+| WAN | ISP Router | G0/0 | 203.0.113.1 | /30 | — | External network |
+| WAN | R1 | G0/0 | 203.0.113.2 | /30 | 203.0.113.1 | NAT Outside |
+| VLAN 10 | R1 | G0/1.10 | 192.168.59.1 | /27 | — | Office gateway |
+| VLAN 10 | PC1 | Fa0/1 | 192.168.59.2 | /27 | .1 | Office workstation |
+| VLAN 10 | PC2 | Fa0/2 | 192.168.59.3 | /27 | .1 | Office workstation |
+| VLAN 10 | Printer | Fa0/3 | 192.168.59.4 | /27 | .1 | Office printer |
+| VLAN 20 | R1 | G0/1.20 | 192.168.59.33 | /27 | — | CCTV gateway |
+| VLAN 20 | Camera 1 | Fa0/6 | 192.168.59.34 | /27 | .33 | CCTV |
+| VLAN 20 | Camera 2 | Fa0/7 | 192.168.59.35 | /27 | .33 | CCTV |
+| VLAN 20 | NVR | Fa0/8 | 192.168.59.36 | /27 | .33 | CCTV recording |
+| VLAN 30 | R1 | G0/1.30 | 192.168.59.65 | /27 | — | IoT gateway |
+| VLAN 30 | Sensor 1 | Fa0/11 | 192.168.59.66 | /27 | .65 | IoT sensor |
+| VLAN 30 | Sensor 2 | Fa0/12 | 192.168.59.67 | /27 | .65 | IoT sensor |
+| VLAN 30 | IoT Controller | Fa0/13 | 192.168.59.68 | /27 | .65 | Operations |
 
-VLSM (unequal masks) is not required. Office, CCTV and IoT are similar in size in this simulation, so equal `/27`s keep documentation and troubleshooting simpler.
+**Preserved Principle:** Port allocation (Fa0/1–5 → VLAN10 etc.) defines VLAN membership. IP Addressing Plan assigns IPs only to actual network devices, not to empty allocated ports.
 
----
+## Step 7 — Addressing Summary (Matches Logical Topology Final SVG)
+| Network | VLAN | Purpose | Gateway | Usable Hosts | Broadcast |
+|---------|------|---------|---------|--------------|-----------|
+| 192.168.59.0/27 | 10 | Office Data | .1 | .2–.30 | .31 |
+| 192.168.59.32/27 | 20 | CCTV | .33 | .34–.62 | .63 |
+| 192.168.59.64/27 | 30 | IoT / Operations | .65 | .66–.94 | .95 |
+| 203.0.113.0/30 | WAN | External | .1 ISP / .2 R1 | .1–.2 | .3 |
 
-## 4. Subnet allocation
-
-| Subnet | Network          | Mask              | CIDR  | VLAN | Role             | Status      |
-| ------ | ---------------- | ----------------- | ----- | ---- | ---------------- | ----------- |
-| 0      | `192.168.59.0`   | `255.255.255.224` | `/27` | 10   | Office Data      | Allocated   |
-| 1      | `192.168.59.32`  | `255.255.255.224` | `/27` | 20   | CCTV             | Allocated   |
-| 2      | `192.168.59.64`  | `255.255.255.224` | `/27` | 30   | IoT / Operations | Allocated   |
-| 3      | `192.168.59.96`  | `255.255.255.224` | `/27` | —    | Reserved         | Unallocated |
-| 4      | `192.168.59.128` | `255.255.255.224` | `/27` | —    | Reserved         | Unallocated |
-| 5      | `192.168.59.160` | `255.255.255.224` | `/27` | —    | Reserved         | Unallocated |
-| 6      | `192.168.59.192` | `255.255.255.224` | `/27` | —    | Reserved         | Unallocated |
-| 7      | `192.168.59.224` | `255.255.255.224` | `/27` | —    | Reserved         | Unallocated |
-
-Reserved space is not assigned a VLAN in Milestone 1. It remains available if the site later adds a guest Wi-Fi, a second operations bay, or a management segment — without renumbering the three live subnets.
-
----
-
-## 5. VLAN 10 — Office Data (`192.168.59.0/27`)
-
-| Item                   | Value                            |
-| ---------------------- | -------------------------------- |
-| Network address        | `192.168.59.0`                   |
-| Subnet mask            | `255.255.255.224`                |
-| Wildcard (for NAT ACL) | `0.0.0.31`                       |
-| Default gateway        | `192.168.59.1` (R1 `G0/1.10`)    |
-| Usable host range      | `192.168.59.2` – `192.168.59.30` |
-| Broadcast              | `192.168.59.31`                  |
-| NAT                    | Inside source for PAT            |
-| Simulated Internet     | Allowed                          |
-
-| Device  | Interface / port | IPv4 address      | Gateway        |
-| ------- | ---------------- | ----------------- | -------------- |
-| R1      | `G0/1.10`        | `192.168.59.1/27` | —              |
-| PC 1    | SW1 `Fa0/1`      | `192.168.59.2/27` | `192.168.59.1` |
-| PC 2    | SW1 `Fa0/2`      | `192.168.59.3/27` | `192.168.59.1` |
-| Printer | SW1 `Fa0/3`      | `192.168.59.4/27` | `192.168.59.1` |
-
-SW1 `Fa0/4`–`Fa0/5` are reserved as VLAN 10 access ports with no host assigned yet.
-
----
-
-## 6. VLAN 20 — CCTV (`192.168.59.32/27`)
-
-| Item               | Value                             |
-| ------------------ | --------------------------------- |
-| Network address    | `192.168.59.32`                   |
-| Subnet mask        | `255.255.255.224`                 |
-| Default gateway    | `192.168.59.33` (R1 `G0/1.20`)    |
-| Usable host range  | `192.168.59.34` – `192.168.59.62` |
-| Broadcast          | `192.168.59.63`                   |
-| NAT                | Not used                          |
-| Simulated Internet | Denied                            |
-
-| Device   | Interface / port | IPv4 address       | Gateway         |
-| -------- | ---------------- | ------------------ | --------------- |
-| R1       | `G0/1.20`        | `192.168.59.33/27` | —               |
-| Camera 1 | SW1 `Fa0/6`      | `192.168.59.34/27` | `192.168.59.33` |
-| Camera 2 | SW1 `Fa0/7`      | `192.168.59.35/27` | `192.168.59.33` |
-| NVR      | SW1 `Fa0/8`      | `192.168.59.36/27` | `192.168.59.33` |
-
-SW1 `Fa0/9`–`Fa0/10` are reserved as VLAN 20 access ports. Cameras and the NVR can talk on the same VLAN; they must not reach Office or IoT at Layer 3.
-
----
-
-## 7. VLAN 30 — IoT / Operations (`192.168.59.64/27`)
-
-| Item               | Value                             |
-| ------------------ | --------------------------------- |
-| Network address    | `192.168.59.64`                   |
-| Subnet mask        | `255.255.255.224`                 |
-| Default gateway    | `192.168.59.65` (R1 `G0/1.30`)    |
-| Usable host range  | `192.168.59.66` – `192.168.59.94` |
-| Broadcast          | `192.168.59.95`                   |
-| NAT                | Not used                          |
-| Simulated Internet | Denied                            |
-
-| Device         | Interface / port | IPv4 address       | Gateway         |
-| -------------- | ---------------- | ------------------ | --------------- |
-| R1             | `G0/1.30`        | `192.168.59.65/27` | —               |
-| Sensor 1       | SW1 `Fa0/11`     | `192.168.59.66/27` | `192.168.59.65` |
-| Sensor 2       | SW1 `Fa0/12`     | `192.168.59.67/27` | `192.168.59.65` |
-| IoT Controller | SW1 `Fa0/13`     | `192.168.59.68/27` | `192.168.59.65` |
-
-SW1 `Fa0/14`–`Fa0/15` are reserved as VLAN 30 access ports. This subnet is the CR12 isolated operations segment.
-
----
-
-## 8. WAN / NAT outside — `203.0.113.0/30`
-
-This prefix is **outside** the assigned client block. It exists only so Packet Tracer can show inside/outside translation.
-
-| Item             | Value             |
-| ---------------- | ----------------- |
-| Network          | `203.0.113.0/30`  |
-| Mask             | `255.255.255.252` |
-| Usable addresses | 2                 |
-| Broadcast        | `203.0.113.3`     |
-
-| Device     | Interface | Address          | Role                       |
-| ---------- | --------- | ---------------- | -------------------------- |
-| ISP router | `G0/0`    | `203.0.113.1/30` | Simulated upstream gateway |
-| R1         | `G0/0`    | `203.0.113.2/30` | NAT **outside**            |
-
-R1 default route:
-
-```text
-ip route 0.0.0.0 0.0.0.0 203.0.113.1
-```
-
-An external test host will be placed on a separate simulated ISP LAN during Packet Tracer implementation (exact host IP recorded when the `.pkt` file is built). Public resolver `8.8.8.8` is **not** assumed unless that host is actually configured in Packet Tracer.
-
-### NAT matching (Office only)
-
-```text
-access-list 10 permit 192.168.59.0 0.0.0.31
-ip nat inside source list 10 interface GigabitEthernet0/0 overload
-```
-
-> **ACL numbering clarification:** ACL 10 is reserved for NAT source matching. It is separate from the segmentation ACLs 100, 110 and 120 used to enforce VLAN traffic restrictions. This avoids ambiguity between NAT matching and traffic-segmentation policy.
-
-* `0.0.0.31` matches the 32-address Office `/27` only.
-* CCTV (`192.168.59.32/27`) and IoT (`192.168.59.64/27`) are excluded from NAT.
-* `G0/1.10` is NAT **inside**; `G0/0` is NAT **outside**.
-
----
-
-## 9. Master addressing table (submission table)
-
-| Network | Device         | Interface    | IPv4 address    | Mask  | Gateway         | Purpose                     |
-| ------- | -------------- | ------------ | --------------- | ----- | --------------- | --------------------------- |
-| WAN     | ISP router     | `G0/0`       | `203.0.113.1`   | `/30` | —               | Simulated ISP               |
-| WAN     | R1             | `G0/0`       | `203.0.113.2`   | `/30` | `203.0.113.1`   | NAT outside                 |
-| VLAN 10 | R1             | `G0/1.10`    | `192.168.59.1`  | `/27` | —               | Office gateway / NAT inside |
-| VLAN 10 | PC 1           | `SW1 Fa0/1`  | `192.168.59.2`  | `/27` | `192.168.59.1`  | Office workstation          |
-| VLAN 10 | PC 2           | `SW1 Fa0/2`  | `192.168.59.3`  | `/27` | `192.168.59.1`  | Office workstation          |
-| VLAN 10 | Printer        | `SW1 Fa0/3`  | `192.168.59.4`  | `/27` | `192.168.59.1`  | Office printer              |
-| VLAN 20 | R1             | `G0/1.20`    | `192.168.59.33` | `/27` | —               | CCTV gateway                |
-| VLAN 20 | Camera 1       | `SW1 Fa0/6`  | `192.168.59.34` | `/27` | `192.168.59.33` | CCTV                        |
-| VLAN 20 | Camera 2       | `SW1 Fa0/7`  | `192.168.59.35` | `/27` | `192.168.59.33` | CCTV                        |
-| VLAN 20 | NVR            | `SW1 Fa0/8`  | `192.168.59.36` | `/27` | `192.168.59.33` | Recording                   |
-| VLAN 30 | R1             | `G0/1.30`    | `192.168.59.65` | `/27` | —               | IoT gateway                 |
-| VLAN 30 | Sensor 1       | `SW1 Fa0/11` | `192.168.59.66` | `/27` | `192.168.59.65` | Operations sensor           |
-| VLAN 30 | Sensor 2       | `SW1 Fa0/12` | `192.168.59.67` | `/27` | `192.168.59.65` | Operations sensor           |
-| VLAN 30 | IoT Controller | `SW1 Fa0/13` | `192.168.59.68` | `/27` | `192.168.59.65` | Operations controller       |
-
-End devices use static IPv4 in Milestone 1 so addresses stay identical between this document, the diagrams and later tests. DHCP can be added later only if it is needed for demonstration; it is not required by the brief.
-
----
-
-## 10. Addressing rules used on this project
-
-1. Gateway = first usable address in each subnet (`.1`, `.33`, `.65`).
-2. End hosts start at the second usable address.
-3. Switch ports are VLAN membership; empty reserved ports do not receive IP addresses.
-4. Internal addresses stay inside `192.168.59.0/24`.
-5. NAT overload uses R1's outside interface address (`203.0.113.2`).
-6. **ACL 10 is reserved for NAT source matching and is separate from segmentation ACLs 100, 110 and 120.**
-
----
-
-## 11. Related documents
-
-* [`../01_Client_Requirements/01-client-requirements.md`](../01_Client_Requirements/01-client-requirements.md)
-* [`../02_Physical_Topology/physical_topology.md`](../02_Physical_Topology/physical_topology.md)
-* [`../03_Logical_Topology/logical_topology.md`](../03_Logical_Topology/logical_topology.md)
-
----
-
-## 12. Document control
-
-| Version | Date       | Author      | Changes                                                                                         |
-| ------- | ---------- | ----------- | ----------------------------------------------------------------------------------------------- |
-| 1.0     | 2026-08-26 | SITHOLE, TJ | Initial addressing tables                                                                       |
-| 1.1     | 2026-08-27 | SITHOLE, TJ | Full Milestone 1 plan: subnet math, reserved `/27`s, NAT wildcard, WAN TEST-NET-3, master table |
-| 2.0     | 2026-08-28 | SITHOLE, TJ | Final M1 Lock — consistent with Physical v1.7 and Logical v1.5                                  |
+This matches Logical Topology DITHARE_FINAL_diagramsnet_style.svg 100% — same gateways, same device IPs, same Fa ports, same NAT scope (Office only).

@@ -78,6 +78,7 @@ Milestone 2 focused on implementing the approved network design in Cisco Packet 
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | Final Packet Tracer implementation  | [`05_Packet_Tracer/CMPG325-2026-138_Dithare-Network-Final.pkt`](05_Packet_Tracer/CMPG325-2026-138_Dithare-Network-Final.pkt) |
 | Packet Tracer documentation         | [`05_Packet_Tracer/README.md`](05_Packet_Tracer/README.md)                                                                   |
+| Milestone 2 review document          | [`10_Technical_Report/CMPG325-2026-138_SITHOLE-TJ_Milestone2.docx`](10_Technical_Report/CMPG325-2026-138_SITHOLE-TJ_Milestone2.docx) |
 | Configuration documentation         | [`06_Configuration/README.md`](06_Configuration/README.md)                                                                   |
 | Testing documentation               | [`07_Testing/README.md`](07_Testing/README.md)                                                                               |
 | Testing and implementation evidence | [`09_Evidence/`](09_Evidence/)                                                                                               |
@@ -95,6 +96,19 @@ The final Packet Tracer file contains the working implementation used during Mil
 
 ---
 
+## Final submission preparation — 16 October 2026
+
+| Deliverable | Current file or status |
+| --- | --- |
+| Packet Tracer project | [`05_Packet_Tracer/CMPG325-2026-138_Dithare-Network-Final.pkt`](05_Packet_Tracer/CMPG325-2026-138_Dithare-Network-Final.pkt) |
+| Final live verification | [`07_Testing/Milestone3_Final_Verification.md`](07_Testing/Milestone3_Final_Verification.md) |
+| Technical report | [`10_Technical_Report/CMPG325-2026-138_SITHOLE-TJ_Final_Technical_Report.docx`](10_Technical_Report/CMPG325-2026-138_SITHOLE-TJ_Final_Technical_Report.docx) |
+| Video demonstration | [`11_Video/CMPG325-2026-138_15-20_Minute_Video_Run_Sheet.docx`](11_Video/CMPG325-2026-138_15-20_Minute_Video_Run_Sheet.docx) is a recording guide; the student still needs to record and add the 15–20 minute inset-webcam video. |
+
+These files and notes are prepared in the project folder; the updated portfolio still needs to be committed and uploaded to GitHub. The final verification was performed in a Save As copy. Office PAT, switch VLAN/trunk state, routing, CCTV internal connectivity, and the tested inter-segment restrictions were checked. The IoT live test verified gateway access and ACL isolation with a temporary host; it did not test sensor-to-controller telemetry. See the report and verification addendum for scope and results.
+
+---
+
 ## Repository structure
 
 ```text
@@ -106,14 +120,12 @@ CMPG325-2026-138_SITHOLE-TJ/
 ├── 04_IP_Addressing/
 ├── 05_Packet_Tracer/          # Milestone 2 — .pkt file
 ├── 06_Configuration/          # Milestone 2 — device configs
-├── 07_Testing/                # Milestone 2 — test results
+├── 07_Testing/                # Milestone 2 results and final verification addendum
 ├── 08_Troubleshooting/        # Troubleshooting records
 ├── 09_Evidence/               # Milestone 2 — screenshots/evidence
-├── 10_Technical_Report/       # Final submission
-└── 11_Video/                  # Final submission
+├── 10_Technical_Report/       # Milestone 2 report and final technical report
+└── 11_Video/                  # Video demonstration run sheet; recorded video to be added
 ```
-
-The `10_Technical_Report/` and `11_Video/` folders are reserved for the final submission material.
 
 ---
 

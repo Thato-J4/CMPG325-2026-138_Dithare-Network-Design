@@ -1,0 +1,7 @@
+# Packet Tracer temp/lock files
+*.pkt.lock
+~*.pkt
+
+# OS files
+.DS_Store
+Thumbs.db
